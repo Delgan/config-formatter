@@ -1,0 +1,55 @@
+[build-system]
+build-backend = "setuptools.build_meta:__legacy__"
+requires = ["setuptools>=60.0.0", "wheel"]
+
+[project]
+authors = [
+  {name = "Delgan", email = "delgan.py@gmail.com"},
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Software Development :: Quality Assurance",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "configupdater>=3.0",
+]
+description = "An automatic formatter for .ini and .cfg configuration files"
+keywords = [
+  "config",
+  "formatter",
+  "ini",
+  "cfg",
+  "configuration",
+  "configparser",
+]
+license = {text = "MIT license"}
+name = "config-formatter"
+readme = "README.md"
+requires-python = ">=3.7"
+version = "1.0.0"
+
+[project.optional-dependencies]
+dev = [
+  "pre-commit>=2.19.0",
+  "pytest>=7.0.0",
+]
+
+[project.urls]
+Changelog = "https://github.com/Delgan/config-formatter/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/Delgan/config-formatter"
+
+[tool.setuptools]
+py-modules = ["config_formatter"]
