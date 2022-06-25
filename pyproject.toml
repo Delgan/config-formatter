@@ -39,7 +39,7 @@ license = {text = "MIT license"}
 name = "config-formatter"
 readme = "README.md"
 requires-python = ">=3.7"
-version = "1.0.0"
+version = "1.0.1"
 
 [project.optional-dependencies]
 dev = [
