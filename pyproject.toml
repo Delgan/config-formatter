@@ -53,3 +53,6 @@ Homepage = "https://github.com/Delgan/config-formatter"
 
 [tool.setuptools]
 py-modules = ["config_formatter"]
+
+[tool.setuptools.packages.find]
+include = ["tests/**"]
