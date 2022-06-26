@@ -258,6 +258,36 @@ def test_no_extra_newline_added_to_multiline_value():
     compare_formatting(config, expected)
 
 
+def test_indented_options():
+    config = """\
+    [section1]
+        key1 = value1
+        key2 = value2
+      key3 = value3
+
+    [section2]
+        [section3]
+
+        key1 = value1
+        key2 = value2
+      key3 = value3
+    """
+    expected = """\
+    [section1]
+    key1 = value1
+    key2 = value2
+    key3 = value3
+
+    [section2]
+    [section3]
+
+    key1 = value1
+    key2 = value2
+    key3 = value3
+    """
+    compare_formatting(config, expected)
+
+
 def test_comments_inside_multiline_values():
     config = """\
     [section]
