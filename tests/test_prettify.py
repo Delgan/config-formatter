@@ -288,6 +288,42 @@ def test_indented_options():
     compare_formatting(config, expected)
 
 
+def test_formatting_key_with_empty_value():
+    config = """\
+    [section1]
+    key1 =
+    key2=
+    key3:
+
+    [section2]
+        key1=
+    key2    =
+    key3 :
+
+    [section3]
+    key1=#
+    key2   :   # Comment 1.
+    key3  =#Comment 2.
+    """
+    expected = """\
+    [section1]
+    key1 =
+    key2 =
+    key3 =
+
+    [section2]
+    key1 =
+    key2 =
+    key3 =
+
+    [section3]
+    key1 = #
+    key2 = # Comment 1.
+    key3 = #Comment 2.
+    """
+    compare_formatting(config, expected)
+
+
 def test_comments_inside_multiline_values():
     config = """\
     [section]
