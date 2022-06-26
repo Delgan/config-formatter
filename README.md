@@ -1,6 +1,6 @@
 # config-formatter
 
-[![Pypi version](https://img.shields.io/pypi/v/config-formatter.svg)](https://pypi.python.org/pypi/config-formatter) [![Python version](https://img.shields.io/badge/python-3.7%2B-blue.svg)](https://pypi.python.org/pypi/config-formatter) [![Build status](https://img.shields.io/github/workflow/status/Delgan/config-formatter/Tests/main)](https://github.com/Delgan/config-formatter/actions/workflows/tests.yml?query=branch:main) [![License](https://img.shields.io/github/license/delgan/config-formatter.svg)](https://github.com/Delgan/config-formatter/blob/main/LICENSE)
+[![Pypi version](https://img.shields.io/pypi/v/config-formatter.svg)](https://pypi.python.org/pypi/config-formatter) [![Python version](https://img.shields.io/badge/python-3.6%2B-blue.svg)](https://pypi.python.org/pypi/config-formatter) [![Build status](https://img.shields.io/github/workflow/status/Delgan/config-formatter/Tests/main)](https://github.com/Delgan/config-formatter/actions/workflows/tests.yml?query=branch:main) [![License](https://img.shields.io/github/license/delgan/config-formatter.svg)](https://github.com/Delgan/config-formatter/blob/main/LICENSE)
 
 An automatic formatter for .ini and .cfg configuration files.
 

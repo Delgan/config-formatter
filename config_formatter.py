@@ -63,7 +63,7 @@ class ConfigFormatter:
             elif isinstance(block, configupdater.Option):
                 key = block.raw_key
                 value = block.value
-                if value is None:  # Should never happens in theory as "allow_no_value" is disabled.
+                if value is None:  # Should never happen in theory as "allow_no_value" is disabled.
                     output += f"{key}\n"
                 elif "\n" in value:
                     first, *lines = (line.strip() for line in value.splitlines())
