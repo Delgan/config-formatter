@@ -472,6 +472,36 @@ def test_end_of_line_trimmed():
     compare_formatting(config, expected)
 
 
+def test_section_inside_multiline_option():
+    config = """\
+    [section]
+    key =
+          value
+
+          [section2]
+          key2 = value2
+
+    key2 = value2
+
+      [section2]
+      key2 = value2
+    """
+    expected = """\
+    [section]
+    key =
+        value
+
+        [section2]
+        key2 = value2
+
+    key2 = value2
+
+           [section2]
+           key2 = value2
+    """
+    compare_formatting(config, expected)
+
+
 def test_testenv_example():
     config = """\
     [testenv]
