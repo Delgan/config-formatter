@@ -13,7 +13,7 @@ repos:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
 - repo: https://github.com/pycqa/isort
-  rev: 5.10.1
+  rev: 5.12.0
   hooks:
   - id: isort
     args: [-l, '100', --profile, black]
@@ -21,7 +21,7 @@ repos:
   rev: 22.3.0
   hooks:
   - id: black
-    args: [-l, '100', --target-version, py35]
+    args: [-l, '100', --target-version, py36]
 - repo: https://github.com/pycqa/flake8
   rev: 4.0.1
   hooks:
