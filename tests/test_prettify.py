@@ -198,6 +198,24 @@ def test_formatting_options_delimiters():
     compare_formatting(config, expected)
 
 
+def test_ambiguous_separator():
+    config = """\
+    [section]
+    key1 : value1=value2
+    key2:key3 = "value"
+    key3 = value3:value4
+    key4=key5 = "value6"
+    """
+    expected = """\
+    [section]
+    key1 = value1=value2
+    key2 = key3 = "value"
+    key3 = value3:value4
+    key4 = key5 = "value6"
+    """
+    compare_formatting(config, expected)
+
+
 def test_formatting_multiline_values():
     config = """\
     [section]
@@ -390,6 +408,34 @@ def test_comment_along_multiline_values():
            2#Comment 2
 
            3 #Comment 3
+    """
+    compare_formatting(config, expected)
+
+
+def test_bracket_inside_comment():
+    config = """\
+    [root]
+    key1=value1
+    ; [root]
+    key2=value2
+    ; b = 2 [b]
+    key3=value3
+    # [root]
+    key4=value4
+    # c = 3 [[c]]
+    key5=value5
+    """
+    expected = """\
+    [root]
+    key1 = value1
+    ; [root]
+    key2 = value2
+    ; b = 2 [b]
+    key3 = value3
+    # [root]
+    key4 = value4
+    # c = 3 [[c]]
+    key5 = value5
     """
     compare_formatting(config, expected)
 
