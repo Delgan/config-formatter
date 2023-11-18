@@ -1,4 +1,4 @@
-from configparser import ConfigParser
+from configparser import ConfigParser, DuplicateSectionError
 from textwrap import dedent
 
 import pytest
@@ -6,7 +6,7 @@ import pytest
 from config_formatter import ConfigFormatter
 
 
-def compare_formatting(config: str, expected: str):
+def compare_formatting(config: str, expected: str, *, verify_parsing: bool = True) -> None:
     config = dedent(config)
     expected = dedent(expected)
 
@@ -14,10 +14,11 @@ def compare_formatting(config: str, expected: str):
     result = formatter.prettify(config)
     assert result == expected
 
-    parser_before, parser_after = ConfigParser(), ConfigParser()
-    parser_before.read_string(config)
-    parser_after.read_string(result)
-    assert parser_before == parser_after
+    if verify_parsing:
+        parser_before, parser_after = ConfigParser(), ConfigParser()
+        parser_before.read_string(config)
+        parser_after.read_string(result)
+        assert parser_before == parser_after
 
 
 @pytest.mark.parametrize("string", ["", "\n", "\n\n\n", "\r\n", " ", "\t", "\n \n\t\n"])
@@ -590,6 +591,103 @@ def test_section_inside_multiline_option():
            key2 = value2
     """
     compare_formatting(config, expected)
+
+
+def test_properties_without_section():
+    config = """\
+            key1 = value1
+    key2 = value2 # Comment.
+    key3:value3
+    """
+    expected = """\
+    key1 = value1
+    key2 = value2 # Comment.
+    key3 = value3
+    """
+    compare_formatting(config, expected, verify_parsing=False)
+
+
+def test_property_before_any_section():
+    config = """\
+
+    root = true
+
+    [section]
+    foo = bar
+    baz = 123
+    """
+    expected = """\
+    root = true
+
+    [section]
+    foo = bar
+    baz = 123
+    """
+    compare_formatting(config, expected, verify_parsing=False)
+
+
+def test_comment_and_properties_before_any_section():
+    config = """\
+
+        # Comment before.
+        abc = 123
+            # 456
+            789
+
+    [section-1]
+    foo= bar
+    [section-2]
+    bar =foo
+    """
+    expected = """\
+    # Comment before.
+    abc = 123
+          # 456
+          789
+
+    [section-1]
+    foo = bar
+    [section-2]
+    bar = foo
+    """
+    compare_formatting(config, expected, verify_parsing=False)
+
+
+def test_no_error_if_dummy_section_name_exists_without_top_section():
+    # The section names here are derived from the internal ConfigFormatter implementation.
+    config = """\
+    root:true
+    [config-formatter-dummy-section-name]
+    key:value
+    [config-formatter-dummy-section-name-0]
+    key0:value0
+    [config-formatter-dummy-section-name-1]
+    key1:value1
+    """
+    expected = """\
+    root = true
+    [config-formatter-dummy-section-name]
+    key = value
+    [config-formatter-dummy-section-name-0]
+    key0 = value0
+    [config-formatter-dummy-section-name-1]
+    key1 = value1
+    """
+    compare_formatting(config, expected, verify_parsing=False)
+
+
+def test_duplicate_section_error_reported_when_no_top_section():
+    config = """\
+    key1 = value1
+
+    [section]
+    key = value
+
+    [section]
+    key = value
+    """
+    with pytest.raises(DuplicateSectionError):
+        ConfigFormatter().prettify(dedent(config))
 
 
 def test_testenv_example():

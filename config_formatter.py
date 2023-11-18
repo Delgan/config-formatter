@@ -1,4 +1,6 @@
 """The `config-parser` module provides utilities to format .ini and .cfg files."""
+from typing import Tuple
+
 import configupdater
 import configupdater.builder
 import configupdater.container
@@ -30,6 +32,14 @@ class ConfigFormatter:
         string = string.strip()
         if not string:
             return "\n"
+        base_config, has_dummy_top_section = self._load_config(string)
+        return self._format_config(base_config, has_dummy_top_section=has_dummy_top_section)
+
+    def _load_config(self, string: str) -> Tuple[configupdater.parser.Document, bool]:
+        """Load the given string as a configuration document.
+
+        It also implements a workaround to handle configs that do not have a top section header.
+        """
         parser = configupdater.parser.Parser(
             strict=True,
             delimiters=("=", ":"),
@@ -38,21 +48,35 @@ class ConfigFormatter:
             allow_no_value=False,
             empty_lines_in_values=True,
         )
-        base_config = parser.read_string(string)
-        return self._format_config(base_config)
 
-    def _format_config(self, source: configupdater.container.Container) -> str:
+        try:
+            return parser.read_string(string), False
+        except configupdater.MissingSectionHeaderError:
+            i = 1
+            while True:
+                dummy_section = f"[config-formatter-dummy-section-name-{i}]"
+                if dummy_section in string:
+                    i += 1
+                    continue
+                return parser.read_string(f"{dummy_section}\n{string}"), True
+
+    def _format_config(
+        self, source: configupdater.container.Container, *, has_dummy_top_section: bool
+    ) -> str:
         """Recursively construct a normalized string of the given configuration."""
         output = ""
 
         for block in source.iter_blocks():
             if isinstance(block, configupdater.Section):
-                comment = block.raw_comment.strip()
-                if comment:
-                    output += f"[{block.name}]  {comment}\n"
+                if has_dummy_top_section:
+                    has_dummy_top_section = False
                 else:
-                    output += f"[{block.name}]\n"
-                output += self._format_config(block)
+                    comment = block.raw_comment.strip()
+                    if comment:
+                        output += f"[{block.name}]  {comment}\n"
+                    else:
+                        output += f"[{block.name}]\n"
+                output += self._format_config(block, has_dummy_top_section=False)
             elif isinstance(block, configupdater.Comment):
                 for line in block.lines:
                     comment = line.strip()
