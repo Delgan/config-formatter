@@ -441,7 +441,6 @@ def test_bracket_inside_comment():
     compare_formatting(config, expected)
 
 
-@pytest.mark.skip("Requires a fix in ConfigUpdater.")
 def test_non_alpha_numeric_characters_in_section_name():
     config = """\
     [ ]
