@@ -10,8 +10,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:
-        - ubuntu-latest
         python-version:
         - '3.8'
         - '3.9'
@@ -20,12 +18,14 @@ jobs:
         - '3.12'
         - '3.13'
         - pypy-3.9
+        os:
+        - ubuntu-latest
         include:
-        - os: ubuntu-22.04
-          python-version: '3.6'
+        - python-version: '3.6'
+          os: ubuntu-22.04
           container: python:3.6-slim
-        - os: ubuntu-22.04
-          python-version: '3.7'
+        - python-version: '3.7'
+          os: ubuntu-22.04
     runs-on: ${{ matrix.os }}
     # Some versions of Python are not longer supported by GitHub Actions.
     # For those, we use a container image and skip the setup-python step.
